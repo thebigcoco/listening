@@ -1,26 +1,38 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-05-29T06:59:07.516Z",
   "windowHours": 48,
-  "source": "waiting-for-reddit-api-secrets",
+  "source": "reddit-public-json",
   "setupErrors": [
-    "Waiting for REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET."
+    "No Reddit posts were fetched. Set REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET for reliable updates."
   ],
   "subreddits": {
     "MSI_Gaming": {
       "posts": [],
-      "errors": []
+      "errors": [
+        "/r/MSI_Gaming/top.json?t=week&limit=100&raw_json=1: 403 Blocked",
+        "/r/MSI_Gaming/hot.json?limit=100&raw_json=1: 403 Blocked"
+      ]
     },
     "buildapc": {
       "posts": [],
-      "errors": []
+      "errors": [
+        "/r/buildapc/top.json?t=week&limit=100&raw_json=1: 403 Blocked",
+        "/r/buildapc/hot.json?limit=100&raw_json=1: 403 Blocked"
+      ]
     },
     "asusrog": {
       "posts": [],
-      "errors": []
+      "errors": [
+        "/r/asusrog/top.json?t=week&limit=100&raw_json=1: 403 Blocked",
+        "/r/asusrog/hot.json?limit=100&raw_json=1: 403 Blocked"
+      ]
     },
     "pcmasterrace": {
       "posts": [],
-      "errors": []
+      "errors": [
+        "/r/pcmasterrace/top.json?t=week&limit=100&raw_json=1: 403 Blocked",
+        "/r/pcmasterrace/hot.json?limit=100&raw_json=1: 403 Blocked"
+      ]
     }
   }
 }
