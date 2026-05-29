@@ -1,71 +1,26 @@
 {
-  "updatedAt": "2026-05-29T06:45:49.192Z",
+  "updatedAt": null,
   "windowHours": 48,
-  "source": "sample-data-until-reddit-secrets-are-set; refresh-failed",
+  "source": "waiting-for-reddit-api-secrets",
+  "setupErrors": [
+    "Waiting for REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET."
+  ],
   "subreddits": {
     "MSI_Gaming": {
-      "posts": [
-        {
-          "id": "sample-msi-1",
-          "title": "Sample: MSI Gaming 熱門討論會顯示在這裡",
-          "score": 120,
-          "num_comments": 34,
-          "created_utc": 1780048800,
-          "permalink": "/r/MSI_Gaming/",
-          "author": "sample",
-          "subreddit": "MSI_Gaming"
-        }
-      ],
+      "posts": [],
       "errors": []
     },
     "buildapc": {
-      "posts": [
-        {
-          "id": "sample-buildapc-1",
-          "title": "Sample: buildapc 近兩天熱門討論會顯示在這裡",
-          "score": 240,
-          "num_comments": 88,
-          "created_utc": 1780048800,
-          "permalink": "/r/buildapc/",
-          "author": "sample",
-          "subreddit": "buildapc"
-        }
-      ],
+      "posts": [],
       "errors": []
     },
     "asusrog": {
-      "posts": [
-        {
-          "id": "sample-asusrog-1",
-          "title": "Sample: ASUS ROG 熱門討論會顯示在這裡",
-          "score": 90,
-          "num_comments": 21,
-          "created_utc": 1780048800,
-          "permalink": "/r/asusrog/",
-          "author": "sample",
-          "subreddit": "asusrog"
-        }
-      ],
+      "posts": [],
       "errors": []
     },
     "pcmasterrace": {
-      "posts": [
-        {
-          "id": "sample-pcmr-1",
-          "title": "Sample: PCMR 近兩天熱門討論會顯示在這裡",
-          "score": 360,
-          "num_comments": 140,
-          "created_utc": 1780048800,
-          "permalink": "/r/pcmasterrace/",
-          "author": "sample",
-          "subreddit": "pcmasterrace"
-        }
-      ],
+      "posts": [],
       "errors": []
     }
-  },
-  "setupErrors": [
-    "No new Reddit posts were fetched. Existing data was preserved.",
-    "Set REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET for reliable updates."
-  ]
+  }
 }

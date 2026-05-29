@@ -339,6 +339,9 @@
       } else if (data?.setupErrors?.length) {
         notice.style.display = "block";
         notice.textContent = data.setupErrors.join(" ");
+      } else if (source === "data.json" && results.every(result => result.status === "fulfilled" && !result.value.length)) {
+        notice.style.display = "block";
+        notice.textContent = "等待 Reddit API Secrets 設定完成後，GitHub Action 會自動更新真資料。";
       }
       refreshButton.disabled = false;
     }

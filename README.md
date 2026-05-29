@@ -6,7 +6,7 @@
 - 顯示 `r/MSI_Gaming`、`r/buildapc`、`r/asusrog`、`r/pcmasterrace`
 - 每區列出近 48 小時內 score 最高的 5 篇
 - 頁面優先讀取同 repo 的 `data.json`
-- GitHub Action 每小時更新一次 `data.json`
+- GitHub Action 每 5 分鐘更新一次 `data.json`
 
 建議設定：
 1. 到 Reddit 建立 app：https://www.reddit.com/prefs/apps
