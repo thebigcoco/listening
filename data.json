@@ -1,22 +1,66 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-05-29T06:41:00.000Z",
   "windowHours": 48,
-  "source": "pending-github-action",
+  "source": "sample-data-until-reddit-secrets-are-set",
   "subreddits": {
     "MSI_Gaming": {
-      "posts": [],
+      "posts": [
+        {
+          "id": "sample-msi-1",
+          "title": "Sample: MSI Gaming 熱門討論會顯示在這裡",
+          "score": 120,
+          "num_comments": 34,
+          "created_utc": 1780048800,
+          "permalink": "/r/MSI_Gaming/",
+          "author": "sample",
+          "subreddit": "MSI_Gaming"
+        }
+      ],
       "errors": []
     },
     "buildapc": {
-      "posts": [],
+      "posts": [
+        {
+          "id": "sample-buildapc-1",
+          "title": "Sample: buildapc 近兩天熱門討論會顯示在這裡",
+          "score": 240,
+          "num_comments": 88,
+          "created_utc": 1780048800,
+          "permalink": "/r/buildapc/",
+          "author": "sample",
+          "subreddit": "buildapc"
+        }
+      ],
       "errors": []
     },
     "asusrog": {
-      "posts": [],
+      "posts": [
+        {
+          "id": "sample-asusrog-1",
+          "title": "Sample: ASUS ROG 熱門討論會顯示在這裡",
+          "score": 90,
+          "num_comments": 21,
+          "created_utc": 1780048800,
+          "permalink": "/r/asusrog/",
+          "author": "sample",
+          "subreddit": "asusrog"
+        }
+      ],
       "errors": []
     },
     "pcmasterrace": {
-      "posts": [],
+      "posts": [
+        {
+          "id": "sample-pcmr-1",
+          "title": "Sample: PCMR 近兩天熱門討論會顯示在這裡",
+          "score": 360,
+          "num_comments": 140,
+          "created_utc": 1780048800,
+          "permalink": "/r/pcmasterrace/",
+          "author": "sample",
+          "subreddit": "pcmasterrace"
+        }
+      ],
       "errors": []
     }
   }
