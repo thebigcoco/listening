@@ -88,11 +88,27 @@ async function fetchSubreddit(subreddit, token) {
   };
 }
 
-const token = await getToken();
+let token = null;
+const setupErrors = [];
+let previousData = null;
+
+try {
+  previousData = JSON.parse(await fs.readFile("data.json", "utf8"));
+} catch {
+  previousData = null;
+}
+
+try {
+  token = await getToken();
+} catch (error) {
+  setupErrors.push(error.message);
+}
+
 const output = {
   updatedAt: new Date().toISOString(),
   windowHours: 48,
   source: token ? "reddit-oauth-api" : "reddit-public-json",
+  setupErrors,
   subreddits: {}
 };
 
@@ -104,7 +120,27 @@ await fs.writeFile("data.json", `${JSON.stringify(output, null, 2)}\n`, "utf8");
 
 const total = Object.values(output.subreddits).reduce((sum, item) => sum + item.posts.length, 0);
 if (total === 0) {
-  throw new Error("No Reddit posts were fetched. Add REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET repository secrets.");
+  const previousTotal = previousData?.subreddits
+    ? Object.values(previousData.subreddits).reduce((sum, item) => sum + (item.posts?.length || 0), 0)
+    : 0;
+
+  if (previousTotal > 0) {
+    previousData.updatedAt = output.updatedAt;
+    previousData.source = `${previousData.source || "previous-data"}; refresh-failed`;
+    previousData.setupErrors = [
+      ...setupErrors,
+      "No new Reddit posts were fetched. Existing data was preserved.",
+      "Set REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET for reliable updates."
+    ];
+    await fs.writeFile("data.json", `${JSON.stringify(previousData, null, 2)}\n`, "utf8");
+    console.log(`No new posts fetched. Preserved existing data.json with ${previousTotal} posts.`);
+    process.exit(0);
+  }
+
+  output.setupErrors.push("No Reddit posts were fetched. Set REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET for reliable updates.");
+  await fs.writeFile("data.json", `${JSON.stringify(output, null, 2)}\n`, "utf8");
+  console.log("No Reddit posts fetched. Wrote empty data.json without failing the workflow.");
+  process.exit(0);
 }
 
 console.log(`Wrote data.json with ${total} posts.`);

@@ -8,7 +8,7 @@
 - 頁面優先讀取同 repo 的 `data.json`
 - GitHub Action 每小時更新一次 `data.json`
 
-必要設定：
+建議設定：
 1. 到 Reddit 建立 app：https://www.reddit.com/prefs/apps
 2. 類型選 `script`
 3. 在 GitHub repo 加入 Secrets：
@@ -17,4 +17,4 @@
 4. 到 Actions 手動執行 `Update Reddit Data`
 5. GitHub Pages 指向 repo root
 
-若沒有設定 Reddit Secrets，Reddit 通常會擋匿名請求，頁面就會沒有資料。
+若沒有設定 Reddit Secrets，Action 仍會成功，但可能只能保留既有資料；Reddit 通常會擋匿名請求。

@@ -336,6 +336,9 @@
       if (failed) {
         notice.style.display = "block";
         notice.textContent = `有 ${failed} 個區塊未成功載入；請確認 GitHub Action 已產生 data.json。`;
+      } else if (data?.setupErrors?.length) {
+        notice.style.display = "block";
+        notice.textContent = data.setupErrors.join(" ");
       }
       refreshButton.disabled = false;
     }
