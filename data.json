@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-05-29T06:41:00.000Z",
+  "updatedAt": "2026-05-29T06:45:49.192Z",
   "windowHours": 48,
-  "source": "sample-data-until-reddit-secrets-are-set",
+  "source": "sample-data-until-reddit-secrets-are-set; refresh-failed",
   "subreddits": {
     "MSI_Gaming": {
       "posts": [
@@ -63,5 +63,9 @@
       ],
       "errors": []
     }
-  }
+  },
+  "setupErrors": [
+    "No new Reddit posts were fetched. Existing data was preserved.",
+    "Set REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET for reliable updates."
+  ]
 }
