@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reddit 近兩天熱門討論</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --text: #1d2430;
+      --muted: #5f6b7a;
+      --line: #d8dee7;
+      --accent: #e0522d;
+      --accent-2: #246b58;
+      --warn: #9a4d00;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: 0;
+    }
+
+    header {
+      padding: 28px clamp(16px, 4vw, 40px) 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(26px, 4vw, 42px);
+      line-height: 1.1;
+      font-weight: 760;
+    }
+
+    .meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--text);
+      color: #fff;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font: inherit;
+      font-weight: 650;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: .65;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px clamp(16px, 4vw, 40px) 40px;
+    }
+
+    .notice {
+      display: none;
+      margin-bottom: 16px;
+      padding: 10px 12px;
+      border: 1px solid #e7c48e;
+      border-radius: 6px;
+      background: #fff7e8;
+      color: var(--warn);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    section {
+      min-width: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.25;
+    }
+
+    .status {
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    ol {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    li:last-child { border-bottom: 0; }
+
+    .rank {
+      width: 30px;
+      height: 30px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      background: #eef2f6;
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 13px;
+    }
+
+    a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    a:hover { color: var(--accent); }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .empty {
+      padding: 18px 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .score { color: var(--accent-2); font-weight: 700; }
+
+    @media (max-width: 760px) {
+      .topbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      button { width: 100%; }
+
+      .grid { grid-template-columns: 1fr; }
+
+      .section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div>
+        <h1>Reddit 近兩天熱門討論</h1>
+        <p class="meta" id="updated">資料來源：data.json，依近 48 小時內分數排序。</p>
+      </div>
+      <button id="refresh" type="button">重新整理</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="notice" id="notice"></div>
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <script>
+    const subreddits = ["MSI_Gaming", "buildapc", "asusrog", "pcmasterrace"];
+    const grid = document.querySelector("#grid");
+    const notice = document.querySelector("#notice");
+    const updated = document.querySelector("#updated");
+    const refreshButton = document.querySelector("#refresh");
+
+    const formatter = new Intl.DateTimeFormat("zh-TW", {
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
+    function sectionId(sub, index) {
+      return `${sub}-${index}`.toLowerCase();
+    }
+
+    function renderShell() {
+      grid.innerHTML = subreddits.map((sub, index) => `
+        <section id="${sectionId(sub, index)}">
+          <div class="section-head">
+            <h2>r/${sub}</h2>
+            <span class="status">載入中</span>
+          </div>
+          <div class="empty">正在讀取熱門討論串...</div>
+        </section>
+      `).join("");
+    }
+
+    function postHtml(post, index) {
+      const date = formatter.format(new Date(post.created_utc * 1000));
+      const url = `https://www.reddit.com${post.permalink}`;
+      return `
+        <li>
+          <span class="rank">${index + 1}</span>
+          <div>
+            <a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(post.title)}</a>
+            <div class="stats">
+              <span class="score">${Number(post.score).toLocaleString("zh-TW")} 分</span>
+              <span>${Number(post.num_comments).toLocaleString("zh-TW")} 留言</span>
+              <span>${date}</span>
+            </div>
+          </div>
+        </li>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
+
+    async function fetchCachedData() {
+      const response = await fetch(`data.json?ts=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+      return response.json();
+    }
+
+    async function fetchTop(sub) {
+      const cutoff = Date.now() / 1000 - 48 * 60 * 60;
+      const url = `https://www.reddit.com/r/${sub}/top.json?t=week&limit=100&raw_json=1`;
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+      const payload = await response.json();
+      return payload.data.children
+        .map(item => item.data)
+        .filter(post => !post.stickied && post.created_utc >= cutoff)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5);
+    }
+
+    async function load() {
+      refreshButton.disabled = true;
+      notice.style.display = "none";
+      notice.textContent = "";
+      renderShell();
+
+      let data = null;
+      let results;
+      let source = "data.json";
+
+      try {
+        data = await fetchCachedData();
+        results = subreddits.map(sub => ({
+          status: "fulfilled",
+          value: data.subreddits?.[sub]?.posts || []
+        }));
+      } catch (error) {
+        source = "Reddit live fallback";
+        results = await Promise.allSettled(subreddits.map(fetchTop));
+      }
+
+      let failed = 0;
+
+      results.forEach((result, index) => {
+        const sub = subreddits[index];
+        const section = document.querySelector(`#${sectionId(sub, index)}`);
+        const status = section.querySelector(".status");
+
+        if (result.status === "fulfilled" && result.value.length) {
+          status.textContent = "近 48 小時";
+          section.querySelector(".empty").outerHTML = `<ol>${result.value.map(postHtml).join("")}</ol>`;
+          return;
+        }
+
+        failed += 1;
+        status.textContent = "無資料";
+        section.querySelector(".empty").textContent =
+          result.status === "rejected"
+            ? "目前沒有 data.json，且 Reddit 暫時阻擋即時讀取。"
+            : "近 48 小時內沒有可排序的熱門發文。";
+      });
+
+      const updatedAt = data?.updatedAt ? new Date(data.updatedAt).toLocaleString("zh-TW") : new Date().toLocaleString("zh-TW");
+      updated.textContent = `更新時間：${updatedAt}。資料來源：${source}，依近 48 小時內分數排序。`;
+      if (failed) {
+        notice.style.display = "block";
+        notice.textContent = `有 ${failed} 個區塊未成功載入；請確認 GitHub Action 已產生 data.json。`;
+      }
+      refreshButton.disabled = false;
+    }
+
+    refreshButton.addEventListener("click", load);
+    load();
+  </script>
+</body>
+</html>

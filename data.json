@@ -1,0 +1,23 @@
+{
+  "updatedAt": null,
+  "windowHours": 48,
+  "source": "pending-github-action",
+  "subreddits": {
+    "MSI_Gaming": {
+      "posts": [],
+      "errors": []
+    },
+    "buildapc": {
+      "posts": [],
+      "errors": []
+    },
+    "asusrog": {
+      "posts": [],
+      "errors": []
+    },
+    "pcmasterrace": {
+      "posts": [],
+      "errors": []
+    }
+  }
+}
